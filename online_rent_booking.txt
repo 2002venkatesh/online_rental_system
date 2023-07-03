@@ -1,0 +1,142 @@
+user=[]
+house_details=[]
+approvehouse=[]
+payment_details=[]
+bookinghistory=[]
+class User:
+    def __init__(self,userid,name,phone_number,password,role):
+        self.userid=userid
+        self.name = name
+        self.phone_number = phone_number
+        self.password = password
+        self.role = role
+    def horecodedata(self):
+        user.append(self)
+    def validation(self,userid,password):
+        for i in user:
+            if i.userid==userid and i.password==password:
+                return i
+    def welcome(self):
+        print("welcome User",self.name)
+class home:
+    def __init__(self,home_id,location,square_feet,type,rent,owner_id):
+        self.home_id=home_id
+        self.location=location
+        self.square_feet=square_feet
+        self.type=type
+        self.rent=rent
+        self.owner_id =owner_id
+    def hardcoredata(self):
+        house_details.append(self)
+    def display_house(self):
+        for i in house_details:
+            print(" house_id",i.home_id)
+            print("location",i.location)
+            print("square_feet",i.square_feet)
+            print("type",i.type)
+            print("monthly rent",i.rent)
+            print("Owner_id",i.owner_id)
+            print("_----------------------_")
+class book_house(home):
+    def __init__(self,user_id,name,home_id):
+        self.user_id=user_id
+        self.name=name
+        self.home_id = home_id
+    def display(self):
+        print("----------enter the you want to choose with home id----------")
+        print("User name",self.name)
+        print("User_id",self.user_id)
+        print("Home_id",self.home_id)
+    def return_detail(self,homeid):
+        for i in house_details:
+            if i.home_id==homeid:
+                return i
+class approval(home):
+    def __init__(self,userid,name,home_id,status):
+       # super().__init__(home_id,location,square_feet,type,rent,owner_id)
+        self.userid=userid
+        self.name=name
+        self.home_id=home_id
+        self.status=status
+    def hardcoredata(self):
+        approvehouse.append(self)
+    def approving(self,userid,home_id):
+        c=0
+        for i in approvehouse:
+            if i.home_id==home_id and i.userid==userid and i.status=="Approve":
+                print("your Choice was verified and approved")
+                return i.status
+                c+=1
+        if c==0:
+            print("not approved")
+class payment:
+    def __init__(self,rent_amount,userid,enteredid,user_name,cvv,expiry_date):
+        self.rent=rent_amount
+        self.userid=userid
+        self.enteredid = enteredid
+        self.user_name = user_name
+        self.cvv= cvv
+        self.expiry_date = expiry_date
+    def hardcoredata(self):
+        payment_details.append(self)
+    def cash(self):
+        print("%s paid the house rent via cash"%self.user_name)
+    def card(self):
+        print("%s paid the house rent via card"%self.user_name)
+    def booking_history(self):
+        bookinghistory=payment_details
+        for i in bookinghistory:
+            print("user id",i.userid)
+            print("booked home id",i.enteredid)
+            print("rent",i.rent)
+
+
+if __name__=="__main__":
+    u=User(1,"sanjeev",90000,88,"tenant")
+    u.horecodedata()
+    u=User(2,"venkat",7000,99,"owner")
+    u.horecodedata()
+    u=User(3,"surya",80000,77,"approver")
+    u.horecodedata()
+    u=User(4,"ragu",600000,66,"Admin")
+    u.horecodedata()
+    login_user=u.validation(1,88)
+    house=home(1,"chennai",100,"2bhk",5500,2)
+    house.hardcoredata()
+    house = home(2,"madurai",100,"2bhk",6500,2)
+    house.hardcoredata()
+    approve_house=approval(1,"sanjeev",1,"Approve")
+    approve_house.hardcoredata()
+    approve_house=approval(1,"sanjeev",2," not Approve")
+    approve_house.hardcoredata()
+    if login_user:
+        if login_user.role=="tenant":
+            login_user.welcome()
+            d=input("Do you want to visit house details y/n")
+            if d=='y':
+                print("-----show house details------")
+                house.display_house()
+            enteredid=int(input("enter home id you want to take rent   "))
+            bookthehouse=book_house(login_user.userid,login_user.name,enteredid)
+            bookthehouse.display()
+            ret=bookthehouse.return_detail(enteredid)
+            print("---------status of approval--------")
+            currstatus=approve_house.approving(enteredid,login_user.userid)
+            print("-----------------------------------")
+            if currstatus=="Approve":
+                mode=input("enter the mode of payment whether cash/card(online)")
+                if mode=="cash":
+                    pay_ment=payment(5050,login_user.userid,enteredid,login_user.name,"","")
+                    pay_ment.hardcoredata()
+                    pay_ment.cash()
+                else:
+                    cvv=int(input("enter the cvv"))
+                    expirydate=input("enter the date")
+                    pay_ment = payment(5550, login_user.userid, enteredid, login_user.name,cvv,expirydate)
+                    pay_ment.hardcoredata()
+                    pay_ment.card()
+                print("-----------payment successful--------------")
+            pay_ment.booking_history()
+
+        elif login_user.role=="Admin":
+            login_user.welcome()
